@@ -18,6 +18,9 @@ class Category
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[ORM\Column(type: 'string', length: 120)]
+    private $backName;
+
     #[ORM\OneToMany(mappedBy: 'idCategory', targetEntity: Advert::class)]
     private $adverts;
 
@@ -30,7 +33,9 @@ class Category
     {
         return $this->id;
     }
-
+    public function __toString() {
+        return $this->name;
+    }
     public function getName(): ?string
     {
         return $this->name;
@@ -69,6 +74,18 @@ class Category
                 $advert->setIdCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBackName(): ?string
+    {
+        return $this->backName;
+    }
+
+    public function setBackName(string $backName): self
+    {
+        $this->backName = $backName;
 
         return $this;
     }

@@ -1,6 +1,16 @@
 
 <header class="container">
 <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">ISGHA</a>
+    <a class="navbar-brand" href="{{ path('home') }}">ISGHA</a>
+    <a class="btn btn-primary" href="{{ path('app_advert_new') }}">Déposer une annonce</a>
+    {% if app.user %}
+        <div >
+            You are logged in as <b>{{ app.user.username }}</b> <a class="btn btn-secondary btn-lg" href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% else %}
+        <div>
+            <a class="btn btn-primary btn-lg" href="{{ path('app_login') }}">Login</a>
+        </div>
+    {% endif %}
 </nav>
 </header>

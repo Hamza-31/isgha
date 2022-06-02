@@ -5,5 +5,16 @@
 
 
 body {
-    background-color: lightgray;
+    background-color: #F8F8F8;
+}
+.single-region path{
+    fill: $primary;
+    stroke: $secondary;
+    stroke-width: 1px;
+    transition: fill .2s;
+}
+.single-region path:hover{
+    fill: $secondary;
+    transition: fill .2s;
+
 }

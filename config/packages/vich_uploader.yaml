@@ -1,0 +1,14 @@
+vich_uploader:
+    db_driver: orm
+    metadata:
+        type: attribute
+
+    mappings:
+        adverts_images:
+            uri_prefix: /uploads/images/adverts
+            upload_destination: '%kernel.project_dir%/public/uploads/images/adverts'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true

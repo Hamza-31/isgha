@@ -21,6 +21,9 @@ class Region
     #[ORM\OneToMany(mappedBy: 'idRegion', targetEntity: City::class)]
     private $cities;
 
+    #[ORM\Column(type: 'text')]
+    private $border;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
@@ -69,6 +72,18 @@ class Region
                 $city->setIdRegion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBorder(): ?string
+    {
+        return $this->border;
+    }
+
+    public function setBorder(string $border): self
+    {
+        $this->border = $border;
 
         return $this;
     }
