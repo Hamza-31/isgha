@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}ISGHA - Un site de petites annonces gratuites.{% endblock %}
 
 {% block body %}
-
+    {% for flash_error in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% for flash_error in app.flashes('alert') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
 
 <div class="row">
 

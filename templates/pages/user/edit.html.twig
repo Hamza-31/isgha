@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ISGHA - Modification de l'utilisateur{% endblock %}
+
+{% block body %}
+<div>
+    {% for flash_error in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% for flash_error in app.flashes('alert') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <h1 class="mt-4">
+
+    Modification des informations de l'utilisateur
+    </h1>
+    {{ form_start(userForm) }}
+    <fieldset class="mb-4">
+        <legend>Identité</legend>
+    {{ form_row(userForm.username) }}
+        {{ form_row(userForm.email) }}
+    </fieldset>
+    <fieldset class="mb-4">
+        <legend>Coordonnées</legend>
+        {{ form_row(userForm.phoneNumber) }}
+        {{ form_row(userForm.zipcode) }}
+        {{ form_row(userForm.city) }}
+        {{ form_row(userForm.adress) }}
+        {{ form_row(userForm.plainPassword) }}
+    </fieldset>
+    {{ form_end(userForm) }}
+</div>
+{% endblock %}
