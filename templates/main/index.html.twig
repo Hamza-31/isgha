@@ -9,19 +9,12 @@
     {% for flash_error in app.flashes('alert') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
-
+<div class="row mb-4"><h1 class="text-center">Un site de petites annonces gratuites.</h1></div>
+    <div class="row">{{ render(controller('App\\Controller\\SearchController::searchBar')) }}</div>
 <div class="row">
 
-    <div class="col dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Catégories
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            {% for category in categories %}
-            <li><a class="dropdown-item" href="#">{{ category.name }}</a></li>
-            {% endfor %}
-
-        </ul>
+    <div class="col">
+        <h2>Trouver la bonne affaire parmi {{ nbAdverts }} annonces.</h2>
     </div>
     <div class="col">
     <svg class="svg-ma mt-5" width="500" height="500">

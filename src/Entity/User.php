@@ -60,10 +60,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\OneToMany(mappedBy: 'userNoted', targetEntity: Note::class, orphanRemoval: true)]
+    private $notes;
+
+    private ?float $average=null;
+
     public function __construct()
     {
         $this->registryDate = new DateTimeImmutable();
         $this->adverts = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -270,6 +276,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getUser() === $this) {
+                $note->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+    public function getAverage(): ?float
+    {
+        $notes=$this->notes;
+        if($notes->toArray()===[]){
+            $this->average = null;
+            return $this->average;
+        }
+        $total=0;
+        foreach ($notes as $note){
+            $total+=$note->getNote();
+        }
+        $this->average=round($total/count($notes),1);
+        return $this->average;
+
+    }
+
+    public function setAverage(?float $average): self
+    {
+        $this->average = $average;
 
         return $this;
     }

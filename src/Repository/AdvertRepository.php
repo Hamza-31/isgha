@@ -39,6 +39,23 @@ class AdvertRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAdvertsByName(string $query){
+        $q=$this->createQueryBuilder('ad');
+        $q->where(
+                $q->expr()->andX(
+                $q->expr()->orX(
+                    $q->expr()->like('ad.title',':query'),
+                    $q->expr()->like('ad.description',':query')
+                ),
+                $q->expr()->isNotNull('ad.createdAt')
+                )
+             )
+            ->setParameter('query','%'.$query.'%')
+        ;
+        return $q->getQuery()->getResult();
+
+    }
+
 //    /**
 //     * @return Advert[] Returns an array of Advert objects
 //     */

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'utilisateur{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+{{ user.username }}
+    {{ user.average }}
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Ajouter une note</button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Donner une note à {{ user.username }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(userDetailsForm) }}
+                    {{ form_row(userDetailsForm.note) }}
+                    {{ form_row(userDetailsForm.comment) }}
+                    <div class="modal-footer">
+                        {{ form_row(userDetailsForm.submit) }}
+                    </div>
+                    {{ form_end(userDetailsForm) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

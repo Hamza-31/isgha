@@ -32,10 +32,10 @@ class AdvertType extends AbstractType
             ->add('description',TextareaType ::class,['attr'=>[
                 'class'=>'form-control'
             ],
-                'label'=>'Description'])
+                'label'=>'Description','label_attr'=>['class'=>'form-label mt-3']])
             ->add('price', MoneyType::class, [
                 'attr'=>[
-                    'class'=>'form-control mt-3'
+                    'class'=>'form-control '
                 ],
                 'label'=>'Prix',
                 'label_attr'=>['class'=>'form-label mt-3'],
@@ -49,7 +49,7 @@ class AdvertType extends AbstractType
            // ->add('idLocation')
             ->add('city', ChoiceType::class, [
                 'attr'=>[
-                    'class'=>'form-control'],
+                    'class'=>'form-select'],
                 'label'=>'Ville',
                'label_attr'=>['class'=>'form-label mt-3'],
                 'mapped' => false,
@@ -68,14 +68,14 @@ class AdvertType extends AbstractType
                     return $category->getName();
                 },
                 'attr'=>[
-                'class'=>'form-control'
+                'class'=>'form-select'
             ],
                 'label'=>'Catégorie',
                 'label_attr'=>['class'=>'form-label mt-3']])
             ->add('imageFile', VichImageType::class, [
                 'attr'=>[
                     'class'=>'form-control'],
-                'label' => 'Insérez vos images (JPG file)',
+                'label' => 'Insérez vos images (Fichier JPG)',
                 'label_attr'=>['class'=>'form-label mt-3'],
 
                 // unmapped means that this field is not associated to any entity property

@@ -36,7 +36,7 @@ class RegistrationFormType extends AbstractType
             ->add('zipcode', TextType::class, ['label' =>'Code Postal','attr'=>[
                 'class'=>'form-control']])
             ->add('city', ChoiceType::class, ['label' =>'Ville','attr'=>[
-                'class'=>'form-control'],
+                'class'=>'form-select'],
                 'mapped' => false,
                 'choices'  => $options['cities'],
                 'choice_label' => function (City $city, $key, $value) {
@@ -49,9 +49,9 @@ class RegistrationFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type'=>PasswordType::class,
                 'first_options'=>['label'=>'Mot de passe',
-                'attr' => ['class'=>'form-control']],
+                'attr' => ['class'=>'col-md-6 form-control']],
                 'second_options'=>['label'=>'Confirmation du mot de passe',
-                'attr' => ['class'=>'form-control']],
+                'attr' => ['class'=>'col-md-6 form-control']],
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
@@ -76,7 +76,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'label' => 'En m\'inscrivant à ce site j\'accepte les conditions d\'utilisations'
             ])
-            ->add('submit',SubmitType::class,['label'=>'S\'inscrire','attr'=>['class'=>'btn btn-primary mt-4']])
+            ->add('submit',SubmitType::class,['label'=>'S\'inscrire','attr'=>['class'=>'form-control btn btn-primary mt-4']])
         ;
     }
 

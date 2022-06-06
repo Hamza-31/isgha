@@ -8,7 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Positive;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraint as Assert;
 
 
 #[ORM\Entity(repositoryClass: AdvertRepository::class)]
@@ -21,15 +27,23 @@ class Advert
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[NotBlank()]
+    #[Length(min:6, max: 255)]
     private $title;
 
     #[ORM\Column(type: 'text')]
+    #[NotBlank()]
+    #[Length(min:6, max: 600)]
     private $description;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[NotNull]
+    #[Positive()]
+    #[LessThan(100000000)]
     private $price;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[NotNull]
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable',nullable: true)]
@@ -39,6 +53,7 @@ class Advert
     private $isValid;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'adverts')]
+    #[ORM\JoinColumn(nullable: false)]
     private $idUser;
 
     #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'adverts')]
@@ -165,7 +180,7 @@ class Advert
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     * @param File|UploadedFile|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
     {

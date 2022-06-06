@@ -1,16 +1,29 @@
 
-<header class="container">
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="{{ path('home') }}">ISGHA</a>
-    <a class="btn btn-primary" href="{{ path('app_advert_new') }}">Déposer une annonce</a>
+<header id="header" class="shadow-sm bg-light">
+<nav class="container navbar ">
+    <a  href="{{ path('home') }}"><img src="{{ asset('uploads/images/isgha_logo.png') }}" style="height:55px;"></a>
+    <div class="d-flex">
+    <a class="btn btn-primary text-light mx-2" href="{{ path('app_advert_new') }}">Déposer une annonce</a>
     {% if app.user %}
-        <div >
-            You are logged in as <b>{{ app.user.username }}</b> <a class="btn btn-secondary btn-lg" href="{{ path('app_logout') }}">Logout</a>
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ app.user.username }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{{ path('app_advert_index_user') }}">Mes annonces</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_user',{'id':app.user.id}) }}">Mon informations personnelles</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_user_edit_password',{'id':app.user.id}) }}">Modification du mot de passe</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
+                <li><a class="dropdown-item" href="{{ path('admin') }}">Administration</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
+            </ul>
         </div>
     {% else %}
         <div>
-            <a class="btn btn-primary btn-lg" href="{{ path('app_login') }}">Login</a>
+            <a class="btn btn-outline-primary" href="{{ path('app_login') }}">Connexion</a>
         </div>
     {% endif %}
+    </div>
 </nav>
 </header>

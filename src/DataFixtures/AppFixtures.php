@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Advert;
 use App\Entity\Category;
 use App\Entity\City;
 use App\Entity\Region;
@@ -36,29 +37,33 @@ class AppFixtures extends Fixture
         $catName=['Multimédia','Matériels informatique','Image et son','Gaming', 'Ordinateurs portables', 'Ordinateurs de bureau', 'Téléphones', 'Tablettes','Télévision','Mode','Vêtements','Chaussures','Sacs et accessoire','Montres et bijoux','Équipement bébé','Vêtement bébé','Véhicules','Voitures','Motos','Camions', 'Équipement auto','Équipement moto','Loisirs','Vélo', 'Livres', 'Sports', 'Films','Musique','Animaux','Immobilier','Ventes immobilières', 'Locations', 'Bureau et commerces','Maison','Meubles et décoration', 'Electroménager', 'Jardinage', 'Emploi','Offres d\'emploi', 'Offres de stage'];
         $catBackName=['multimedia','multimedia_materiel_informatique','multimedia_image_son','multimedia_gaming','multimedia_ordinateurs_portables','multimedia_ordinateurs_bureau','multimedia_telephone','multimedia_tablettes','multimedia_television','mode','mode_vetements','mode_chaussures','mode_sac','mode_montres','mode_equipement_bebe','mode_vetement_bebe','vehicules','vehicules_voitures','vehicules_motos','vehicules_camions','vehicules_equipement_auto','vehicules_equipement_moto','loisirs','loisirs_velo','loisirs_livres', 'loisirs_sports','loisirs_film','loisirs_musique','loisirs_animaux','immo','immo_ventes','immo_locations','immo_bureau_commerce','maison','maison_meubles','maison_electromenager','maison_jardinage','emploi','emploi_offre_emploi','emploi_offres_stage'];
         // Create regions
-        for($i=0;$i<12;$i++){
+        /*for($i=0;$i<12;$i++){
             $region = new Region();
             $region->setName($regionName[$i]);
             $region->setBorder($regionBorder[$i]);
             $manager->persist($region);
-        }
+        }*/
 
         // Create categories
-        for($i=0;$i<40;$i++){
+        /*for($i=0;$i<40;$i++){
             $category = new Category();
             $category->setName($catName[$i]);
             $category->setBackName($catBackName[$i]);
             $manager->persist($category);
-        }
+        }*/
         // use the factory to create a Faker\Generator instance
         $faker = Factory::create('fr_MA');
-        for($i=0;$i<2;$i++){
+
+        /*for($i=0;$i<2;$i++){
         $city  = new City();
         $city->setName($faker->city());
         $city->setZipcode($faker->postcode());
         $manager->persist($city);
         $manager->flush();
-        }
+        }*/
+
+
+
 
     }
 }

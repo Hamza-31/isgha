@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats de recherche{% endblock %}
+
+{% block body %}
+
+    {% if adverts %}
+    <h1>Résultats pour votre recherche</h1>
+    <div class="row mt-4 m-auto">
+        {% for advert in adverts %}
+            <div class="col-8 card mb-3 mx-2" style="max-width: 940px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="https://picsum.photos/seed/picsum/200" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <a class="text-decoration-none" href="{{ path('app_advert_show', {'id': advert.id}) }}">
+                            <h5 class="card-title">{{ advert.title }}</h5>
+                            </a>
+                            <p class="card-text">{{ advert.price }}</p>
+                            <small class="text-muted">{{ advert.createdAt|date("d/m/Y à h:m","Europe/Paris") }}</small>
+                            <p class="card-text"> {{ advert.description|u.truncate(100, '...') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <h1>Aucun résultat pour votre résultats</h1>
+    {%  endif %}
+{% endblock %}

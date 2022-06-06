@@ -3,41 +3,44 @@
 {% block title %}Advert index{% endblock %}
 
 {% block body %}
-    <h1>Advert index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>CreatedAt</th>
-                <th>IsValid</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for advert in adverts %}
-            <tr>
-                <td>{{ advert.id }}</td>
-                <td>{{ advert.title }}</td>
-                <td>{{ advert.description }}</td>
-                <td>{{ advert.price }}</td>
-                <td>{{ advert.createdAt ? advert.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ advert.isValid ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_advert_show', {'id': advert.id}) }}">show</a>
-                    <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <h1>Mes annonces</h1>
+    {% for flash_error in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% if adverts %}
+        <div class="row mt-4 m-auto">
+            {% for advert in adverts %}
+                <div class="col-12 card mb-3 mx-2" style="max-width: 940px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="
+" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                            <div class="card-body col-6">
+
+                                <h5 class="card-title">{{ advert.title }}</h5>
+                                <p class="card-text">{{ advert.price }}</p>
+                                <p class="card-text"><small class="text-muted">{{ advert.createdAt|date("d/m/Y à h:m","Europe/Paris") }}</small></p>
+                             </div>
+                            <div class="col-6 mt-4 mx-auto">
+                                <a class="btn btn-primary btn-sm" href="{{ path('app_advert_edit', {'id': advert.id}) }}">Modifier</a>
+                                <a class="btn btn-outline-danger btn-sm" href="{{ path('app_advert_delete', {'id': advert.id}) }}">Supprimer</a>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <h1>Aucun résultat pour <em>"{{ query }}"</em></h1>
+
+    {%  endif %}
 
     <a href="{{ path('app_advert_new') }}">Create new</a>
 {% endblock %}

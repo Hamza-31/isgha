@@ -1,0 +1,34 @@
+acseo_typesense:
+  # Typesense host settings
+  typesense:
+    url: '%env(resolve:TYPESENSE_URL)%'
+    key: '%env(resolve:TYPESENSE_KEY)%'
+  # Collection settings
+  collections:
+    adverts:                                     # Typesense collection name
+      entity: 'App\Entity\Advert'              # Doctrine Entity class
+      fields:
+        #
+        # Keeping Database and Typesense synchronized with ids
+        #
+        id:                                # Entity attribute name
+          name: id                       # Typesense attribute name
+          type: primary                  # Attribute type
+        #
+        # Using again id as a sortable field (int32 required)
+        #
+        sortable_id:
+          entity_attribute: id             # Entity attribute name forced
+          name: sortable_id                # Typesense field name
+          type: int32
+        title:
+          name: title
+          type: string
+        description:
+          name: description
+          type: string                    # Object conversion with __toString()
+        createdAt:
+          name: createdAt
+          type: datetime
+          optional: true                   # Declare field as optional
+      default_sorting_field: sortable_id       # Default sorting field. Must be int32 or float

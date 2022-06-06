@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Advert;
 use App\Entity\Image;
+use App\Entity\Location;
+use App\Entity\User;
 use App\Form\AdvertType;
 use App\Repository\AdvertRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
 use App\Repository\LocationRepository;
+use App\Repository\NoteRepository;
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,12 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/advert')]
 class AdvertController extends AbstractController
 {
-    #[Route('/', name: 'app_advert_index', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function index(AdvertRepository $advertRepository): Response
+    #[Route('/user/list', name: 'app_advert_index_user', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function indexUser(AdvertRepository $advertRepository): Response
     {
         return $this->render('advert/index.html.twig', [
-            'adverts' => $advertRepository->findAll(),
+            'adverts' => $advertRepository->findBy(['idUser'=>$this->getUser()]),
         ]);
     }
     #[IsGranted('ROLE_USER')]
@@ -44,19 +48,27 @@ class AdvertController extends AbstractController
             $city = $form->get("city")->getData();
             // Récupérer la région de la ville
             $region = $city->getIdRegion();
-            $location = $locationRepository->findOneBy(['idRegion' => $region->getId()]);
-            //var_dump($location);
-            //exit();
+            //$location = $locationRepository->findOneBy(['idRegion' => $region->getId()]);
+            $location = new Location();
+            $location->setIdRegion($region);
+
+
             $advert->setIdLocation($location);
             $advert->setIdUser($user);
             $advert->setIsValid(false);
-
+            $locationRepository->add($location, true);
+            $advertRepository->add($advert, true);
             //$advert->setImageFile();
             //$advert->setImageName();
+            $this->addFlash('success','Votre annonce a été ajouté avec succès.');
 
-            $advertRepository->add($advert, true);
+
+            if($advert->getIdUser()->getRoles() === ['ROLE_ADMIN']){
 
             return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
+            }else{
+                return $this->redirectToRoute('app_advert_index_user', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->renderForm('advert/new.html.twig', [
@@ -66,16 +78,40 @@ class AdvertController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_advert_show', methods: ['GET'])]
-    public function show(Advert $advert): Response
+    public function show(Advert $advert, int $id, AdvertRepository $advertRepository, UserRepository $userRepository,NoteRepository $noteRepository): Response
     {
+        $advertUser=$advertRepository->findOneBy(['id'=>$advert->getId()]);
+        $user=$userRepository->findOneBy(['id'=>$advertUser->getIdUser()]);
+        $note=$user->getAverage();
         return $this->render('advert/show.html.twig', [
             'advert' => $advert,
+            'id'=>$id,
+            'user'=>$user,
+
         ]);
     }
+/*
+    #[Route('/{id}', name: 'app_advert_show', methods: ['GET'])]
+    public function showResults(Advert $advert, User $user, UserRepository $userRepository, int $id): Response
+    {
+        $thePublisher = $userRepository->findOneBy(['id'=>$user->getId()]);
+        return $this->render('advert/show.html.twig', [
+            'advert' => $advert,'id'=>$id,
+            'user'=> $thePublisher
+        ]);
+    }
+*/
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
+    public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository,User $user): Response
     {
+        if (!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        if ($this->getUser() !== $user){
+            $this->addFlash('alert','Accès refusé');
+            return $this->redirectToRoute('home');
+        }
         $form = $this->createForm(AdvertType::class, $advert);
         $form->handleRequest($request);
 

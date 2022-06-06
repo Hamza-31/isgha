@@ -9,27 +9,48 @@
 
     <h1>Register</h1>
 
-    {{ form_start(registrationForm) }}
-    <fieldset class="mb-4">
-        <legend>Identité</legend>
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-    </fieldset>
-    <fieldset class="mb-4">
-        <legend>Coordonnées</legend>
-        {{ form_row(registrationForm.phoneNumber) }}
-        {{ form_row(registrationForm.zipcode) }}
-        {{ form_row(registrationForm.city) }}
-        {{ form_row(registrationForm.adress) }}
-    </fieldset>
+    {{ form_start(registrationForm, { 'attr' : { 'class': 'p-3 row g-3 shadow-lg rounded  w-75 m-auto pt-3 pb-4 bg-light row justify-content-center gy-2 align-items-center my-5' } }) }}
 
+        <h2>Identité</h2>
+        <div class="col-md-6">
+            {{ form_row(registrationForm.username) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(registrationForm.email) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(registrationForm.adress) }}
+        </div>
+
+
+        <h2>Coordonnées</h2>
+    <div class="col-md-6">
+        {{ form_row(registrationForm.phoneNumber) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(registrationForm.city) }}
+    </div>
+    <div class="col-md-2">
+        {{ form_row(registrationForm.zipcode) }}
+    </div>
+
+    <div class="col-md-12">
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            {{ form_row(registrationForm.agreeTerms) }}
+        </div>
+    </div>
+    <div class="col-12">
         {{ form_row(registrationForm.submit) }}
+    </div>
+
 
 
 
     {{ form_end(registrationForm) }}
 {% endblock %}
+

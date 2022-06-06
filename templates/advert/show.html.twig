@@ -3,40 +3,42 @@
 {% block title %}Advert{% endblock %}
 
 {% block body %}
-    <h1>Advert</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ advert.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ advert.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ advert.description }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ advert.price }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ advert.createdAt ? advert.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>IsValid</th>
-                <td>{{ advert.isValid ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <img src="" alt="">
-    <a href="{{ path('app_advert_index') }}">back to list</a>
+<div class="row">
+    <div class="col-9">
+        <img class="rounded" src="https://picsum.photos/seed/picsum/730/400" alt="">
 
-    <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a>
+        <div class="col">
+            <div class="d-flex justify-content-between"><h1 class="my-3">{{ advert.title }}</h1>
+                <small class="mt-3">Publiée : {{ advert.createdAt|date('d/m/Y à H:i') }}</small></div>
 
-    {{ include('advert/_delete_form.html.twig') }}
+            <h2>Prix : {{ advert.price }} Dhs</h2>
+            <div class="text-justify mt-4">
+                <h3>Description</h3>
+                <p>{{ advert.description }}</p>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card">
+            <div class="card-body m-2">
+                <div class="row">
+                    <div class="col-4" ><i class="fa-solid fa-user" style="font-size: 50px; color: #35A8AD"></i></div>
+                    <div class="col-8">
+                        <h5 class="card-title">{{ user.username }}</h5>
+                        <p>Note : {{ user.average }}/5</p>
+                    </div>
+                </div>
+                <div class="row"><a href="{{ path('app_user_details',{'id':user.id}) }}" class="btn btn-outline-primary">Voir le profil</a>
+                </div>
+                </div>
+        </div>
+    </div>
+
+    </div>
+
+
 {% endblock %}
