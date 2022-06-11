@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
+    <div class="row">
+<form class="col-7 m-auto bg-white shadow-sm rounded-3 mt-3 mb-3 px-5 py-4 " method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -15,9 +16,9 @@
     {% endif %}
 
     <h1 class="h3 mb-3 font-weight-normal">Connectez-vous</h1>
-    <label for="inputUsername">Identifiant</label>
+    <label class="form-label mt-2" for="inputUsername">Identifiant</label>
     <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
-    <label for="inputPassword">Mot de passe</label>
+    <label class="form-label mt-2" for="inputPassword">Mot de passe</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
     <input type="hidden" name="_csrf_token"
@@ -35,11 +36,12 @@
         </div>
     #}
 
-    <button class="btn btn-lg btn-primary mt-2" type="submit">
+    <button class="btn btn-lg btn-primary mt-3 form-control" type="submit">
         Se connecter
     </button>
     <div>
-    <a class="btn btn-lg btn-outline-secondary mt-2" href="{{ path('app_register') }}">Créer un nouveau compte</a>
+    <a class="btn btn-lg btn-outline-secondary mt-2 form-control" href="{{ path('app_register') }}">Créer un nouveau compte</a>
     </div>
 </form>
+    </div>
 {% endblock %}

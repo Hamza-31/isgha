@@ -6,6 +6,7 @@
 parameters:
     app.jwtsecret: '%env(JWT_SECRET)%'
     app.path.adverts_images: /uploads/images/adverts
+    app.path.product_image: /images/products
 
 services:
     # default configuration for services in *this* file
@@ -21,12 +22,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\Controller\SearchController:
-            arguments:
-                $advertFinder: '@typesense.finder.adverts'
-    App\Component\SearchComponent:
-            arguments:
-                $advertFinder: '@typesense.finder.adverts'
+   # App\Controller\SearchController:
+    #        arguments:
+     #           $advertFinder: '@typesense.finder.adverts'
+  #  App\Component\SearchComponent:
+   #         arguments:
+    #            $advertFinder: '@typesense.finder.adverts'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

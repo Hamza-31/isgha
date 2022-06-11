@@ -14,14 +14,15 @@
                 <div class="col-12 card mb-3 mx-2" style="max-width: 940px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="
-" class="img-fluid rounded-start" alt="...">
+
+                            <img src="{{ vich_uploader_asset(advert, 'imageFile') }}" class="img-fluid rounded-start img-thumbnail"   alt="{{ advert.imageName }}">
                         </div>
                         <div class="col-md-8">
                             <div class="row">
                             <div class="card-body col-6">
-
+                                <a class="text-decoration-none" href="{{ path('app_advert_show', {'id': advert.id}) }}">
                                 <h5 class="card-title">{{ advert.title }}</h5>
+                                </a>
                                 <p class="card-text">{{ advert.price }}</p>
                                 <p class="card-text"><small class="text-muted">{{ advert.createdAt|date("d/m/Y à h:m","Europe/Paris") }}</small></p>
                              </div>
@@ -42,5 +43,5 @@
 
     {%  endif %}
 
-    <a href="{{ path('app_advert_new') }}">Create new</a>
+    <a class="btn btn-outline-primary" href="{{ path('app_advert_new') }}">Ajouter une annonce</a>
 {% endblock %}

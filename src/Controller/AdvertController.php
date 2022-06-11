@@ -15,6 +15,7 @@ use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,19 +57,20 @@ class AdvertController extends AbstractController
             $advert->setIdLocation($location);
             $advert->setIdUser($user);
             $advert->setIsValid(false);
+            // Récupérer le fichier image.
+            $imageFile=$request->files->get('advert')['imageFile']['file'];
+            $imageName=$request->files->get('advert')['imageFile']['file']->getClientOriginalName();
+
+            $uploadedFile = new UploadedFile($imageFile->getPathName(), $imageName, "image/jpg", null, true);
+            $advert->setImageFile($uploadedFile);
+            $advert->setImageName($imageName);
+
             $locationRepository->add($location, true);
             $advertRepository->add($advert, true);
-            //$advert->setImageFile();
-            //$advert->setImageName();
-            $this->addFlash('success','Votre annonce a été ajouté avec succès.');
 
+            $this->addFlash('success', 'Votre annonce a été ajouté avec succès.');
 
-            if($advert->getIdUser()->getRoles() === ['ROLE_ADMIN']){
-
-            return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
-            }else{
-                return $this->redirectToRoute('app_advert_index_user', [], Response::HTTP_SEE_OTHER);
-            }
+            return $this->redirectToRoute('app_advert_index_user');
         }
 
         return $this->renderForm('advert/new.html.twig', [

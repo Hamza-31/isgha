@@ -21,12 +21,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SearchController extends AbstractController
 {
+    /*
     private $advertFinder;
 
     public function __construct($advertFinder)
     {
         $this->advertFinder = $advertFinder;
     }
+    */
     #[Route('/search', name: 'search',methods: ['GET','POST'])]
     public function search(Request $request,AdvertRepository $advertRepository,PaginatorInterface $paginator, RegionRepository $regionRepository,CityRepository $cityRepository,LocationRepository $locationRepository): Response
     {

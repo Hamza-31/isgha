@@ -43,7 +43,7 @@ class RegistrationFormType extends AbstractType
                     return $city->getName();
 
                 }])
-            ->add('adress', TextType::class, ['label' =>'Adresse','attr'=>[
+            ->add('address', TextType::class, ['label' =>'Adresse','attr'=>[
                 'class'=>'form-control']])
 
             ->add('plainPassword', RepeatedType::class, [

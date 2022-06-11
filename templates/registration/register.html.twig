@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1>Inscription</h1>
 
     {{ form_start(registrationForm, { 'attr' : { 'class': 'p-3 row g-3 shadow-lg rounded  w-75 m-auto pt-3 pb-4 bg-light row justify-content-center gy-2 align-items-center my-5' } }) }}
 

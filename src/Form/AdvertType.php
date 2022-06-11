@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -87,6 +88,7 @@ class AdvertType extends AbstractType
 
                 // unmapped fields can't define their validation using annotations
                 // in the associated entity, so you can use the PHP constraint classes
+
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -94,10 +96,11 @@ class AdvertType extends AbstractType
                             'image/jpeg',
                             'image/png',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid JPG document',
+                        'mimeTypesMessage' => 'Ajouter un fichier JPG valide s\'il vous plait.',
                     ])
                 ],
             ])
+            ->add('submit',SubmitType::class,['label'=>'Déposer l\'annonce','attr'=>['class'=>'form-control btn btn-primary mt-4']])
         ;
     }
 

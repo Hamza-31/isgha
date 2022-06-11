@@ -4,17 +4,15 @@ namespace App\Entity;
 
 use App\Repository\AdvertRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Positive;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\Validator\Constraint as Assert;
 
 
 #[ORM\Entity(repositoryClass: AdvertRepository::class)]
@@ -46,8 +44,8 @@ class Advert
     #[NotNull]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable',nullable: true)]
-    private ?DateTimeImmutable $updatedAt=null;
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $updatedAt;
 
     #[ORM\Column(type: 'boolean')]
     private $isValid;
@@ -65,11 +63,12 @@ class Advert
     #[Vich\UploadableField(mapping: 'adverts_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
-    #[ORM\Column(type: 'string',nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $imageName = null;
 
     public function __construct(){
         $this->createdAt= new DateTimeImmutable();
+        $this->updatedAt= new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -180,7 +179,7 @@ class Advert
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|UploadedFile|null $imageFile
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
     {

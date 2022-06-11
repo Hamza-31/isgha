@@ -28,16 +28,16 @@ class Note
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
-
     #[ORM\Column(type: 'text',nullable: true)]
     private ?string $comment=null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $createdAt;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private User $userNoted;
+    private User $notingUser;
+
 
     public function __construct(){
         $this->createdAt=new DateTimeImmutable();
@@ -71,6 +71,17 @@ class Note
 
         return $this;
     }
+    public function getNotingUser(): ?User
+    {
+        return $this->notingUser;
+    }
+
+    public function setNotingUser(?User $user): self
+    {
+        $this->notingUser = $user;
+
+        return $this;
+    }
 
     public function getComment(): ?string
     {
@@ -96,15 +107,5 @@ class Note
         return $this;
     }
 
-    public function getUserNoted(): ?User
-    {
-        return $this->userNoted;
-    }
 
-    public function setUserNoted(?User $userNoted): self
-    {
-        $this->userNoted = $userNoted;
-
-        return $this;
-    }
 }

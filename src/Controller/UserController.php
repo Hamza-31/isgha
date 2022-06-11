@@ -119,23 +119,17 @@ class UserController extends AbstractController
 
 
         if($form->isSubmitted() && $form->isValid()){
-            $note->setUser($this->getUser())
-                ->setUserNoted($user);
-            $existingNote=$noteRepository->findOneBy(['userNoted'=>$user,'user'=>$this->getUser()]);
-            if(!$existingNote){
-            $manager->persist($note);
-            }else{
-
+            $note->setNotingUser($this->getUser())
+                ->setUser($user);
+            $existingNote=$noteRepository->findOneBy(['notingUser'=>$this->getUser(),'user'=>$user]);
+            if($existingNote) {
                 $existingNote->setNote($form->getData()->getNote());
-                $manager->persist($note);
             }
+                $manager->persist($note);
+
             $manager->flush();
             $this->addFlash('success','Votre note a bien été prise.');
                 return $this->redirectToRoute('app_user_details',['id'=>$user->getId()]);
-
-
-
-
 
         }
         return $this->render('pages/user/details.html.twig', [

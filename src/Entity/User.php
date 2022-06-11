@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $adress;
+    private $address;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $city;
@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'userNoted', targetEntity: Note::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Note::class, orphanRemoval: true)]
     private $notes;
 
     private ?float $average=null;
@@ -154,14 +154,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getAddress(): ?string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(string $adress): self
+    public function setAddress(string $address): self
     {
-        $this->adress = $adress;
+        $this->address = $address;
 
         return $this;
     }
@@ -288,11 +288,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->notes;
     }
 
-    public function addNote(Note $note): self
+    public function addNote(Note $note,User $user): self
     {
         if (!$this->notes->contains($note)) {
             $this->notes[] = $note;
-            $note->setUser($this);
+            $note->setNotingUser($this);
         }
 
         return $this;
@@ -304,6 +304,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($note->getUser() === $this) {
                 $note->setUser(null);
+                $note->setNotingUser(null);
             }
         }
 
