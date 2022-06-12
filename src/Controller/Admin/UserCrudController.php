@@ -27,7 +27,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email')
                 ->setFormTypeOption('disabled','disabled'),
             ArrayField::new('roles')->hideOnIndex(),
-            TextField::new('adress')->hideOnIndex(),
+            TextField::new('address')->hideOnIndex(),
             TextField::new('city'),
             DateTimeField::new('registryDate')
                 ->hideOnForm()

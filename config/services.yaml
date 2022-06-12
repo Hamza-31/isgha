@@ -6,14 +6,16 @@
 parameters:
     app.jwtsecret: '%env(JWT_SECRET)%'
     app.path.adverts_images: /uploads/images/adverts
-    app.path.product_image: /images/products
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
+   # App\Entity\Advert:
+   #     autowire: true
+   # App\Entity\User:
+   #     autowire: true
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -22,6 +24,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
    # App\Controller\SearchController:
     #        arguments:
      #           $advertFinder: '@typesense.finder.adverts'

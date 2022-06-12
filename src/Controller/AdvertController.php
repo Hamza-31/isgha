@@ -14,6 +14,7 @@ use App\Repository\LocationRepository;
 use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/advert')]
 class AdvertController extends AbstractController
 {
-    #[Route('/', name: 'app_advert_index_user', methods: ['GET'])]
+    #[Route('/list', name: 'app_advert_index_user', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function indexUser(AdvertRepository $advertRepository): Response
     {
@@ -79,7 +80,8 @@ class AdvertController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_advert_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'app_advert_show', methods: ['GET'])]
+    #[ParamConverter('advert', class: Advert::class)]
     public function show(Advert $advert, int $id, AdvertRepository $advertRepository, UserRepository $userRepository,NoteRepository $noteRepository): Response
     {
         $advertUser=$advertRepository->findOneBy(['id'=>$advert->getId()]);
@@ -92,25 +94,17 @@ class AdvertController extends AbstractController
 
         ]);
     }
-/*
-    #[Route('/{id}', name: 'app_advert_show', methods: ['GET'])]
-    public function showResults(Advert $advert, User $user, UserRepository $userRepository, int $id): Response
-    {
-        $thePublisher = $userRepository->findOneBy(['id'=>$user->getId()]);
-        return $this->render('advert/show.html.twig', [
-            'advert' => $advert,'id'=>$id,
-            'user'=> $thePublisher
-        ]);
-    }
-*/
+
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
-    public function edit(int $id,Request $request, Advert $advert, AdvertRepository $advertRepository,User $user): Response
+    #[ParamConverter('advert', class: Advert::class)]
+    public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
     {
+
         if (!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-        if ($this->getUser() !== $user){
+        if ($this->getUser() !== $advert->getIdUser()){
             $this->addFlash('alert','Accès refusé');
             return $this->redirectToRoute('home');
         }
@@ -121,32 +115,39 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $advertRepository->add($advert, true);
 
-            return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_advert_index_user', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('advert/edit.html.twig', [
             'advert' => $advert,
             'form' => $form,
-            'id'=>$id
+            'id' => $advert->getId()
         ]);
     }
     #[IsGranted('ROLE_USER')]
-    #[Route('/{id}', name: 'app_advert_delete', methods: ['POST'])]
-    public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository,User $user): Response
+    #[Route('/{id}/delete', name: 'app_advert_delete', methods: ['POST','GET'])]
+    #[ParamConverter('advert', class: Advert::class)]
+    public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
     {
+
         if (!$this->getUser()){
+            $this->addFlash('alert', 'Votre devez avoir un compte pour ajouter une annonce.');
             return $this->redirectToRoute('app_login');
         }
-        if ($this->getUser() !== $user){
-            $this->addFlash('alert','Accès refusé');
+        if ($this->getUser() !== $advert->getIdUser()){
+            $this->addFlash('alert', 'Vous n\'êtes pas l\'auteur de cette annonce.');
             return $this->redirectToRoute('home');
         }
+        if($this->getUser() === $advert->getIdUser()){
 
-        if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
-            dd($advert);
-            $advertRepository->remove($advert, true);
-
+            $advert->setIsValid(false);
+            $advertRepository->add($advert,true);
+        }else{
+            $this->addFlash('Erreur', "Vous n'êtes pas l'auteur de cette annonce !" );
+            return $this->redirectToRoute('app_advert_show', ['id' => $advert->getId()]);
         }
+
+        $this->addFlash('success','Votre annonce a été supprimée.');
 
         return $this->redirectToRoute('app_advert_index_user', [], Response::HTTP_SEE_OTHER);
     }

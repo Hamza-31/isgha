@@ -59,13 +59,12 @@ class SearchController extends AbstractController
                     $adverts=$advertRepository->findAdverts($query,162,[17]);
                 }
                 if(!$query && $idCategory!=162 && in_array(17,$idLocations)){
-                    $adverts=$advertRepository->findAdverts('',$idCategory,17);
+                    $adverts=$advertRepository->findAdverts('',$idCategory,[17]);
                 }
                 if(!$query && $idCategory==162 && !in_array(17,$idLocations)){
                     $adverts=$advertRepository->findAdverts('',162,$idLocations);
                 }
                 if($query && $idCategory!=162 && in_array(17,$idLocations)){
-
                     $adverts=$advertRepository->findAdverts($query,$idCategory,[17]);
                 }
                 if($query && $idCategory==162 && !in_array(17,$idLocations)){
@@ -123,5 +122,7 @@ class SearchController extends AbstractController
 
         return $this->render('components/search_bar.html.twig',['searchForm'=>$form->createView()]);
     }
+
+
 
 }

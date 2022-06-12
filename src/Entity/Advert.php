@@ -45,6 +45,7 @@ class Advert
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime')]
+    #[NotNull]
     private DateTimeInterface $updatedAt;
 
     #[ORM\Column(type: 'boolean')]

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Advert index{% endblock %}
+{% block title %}Mes annonces{% endblock %}
 
 {% block body %}
 
@@ -39,7 +39,7 @@
         </div>
 
     {% else %}
-        <h1>Aucun résultat pour <em>"{{ query }}"</em></h1>
+        <p>Vous n'avez pas encore créé d'annonce.</p>
 
     {%  endif %}
 
