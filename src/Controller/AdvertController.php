@@ -23,12 +23,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/advert')]
 class AdvertController extends AbstractController
 {
-    #[Route('/user/list', name: 'app_advert_index_user', methods: ['GET'])]
+    #[Route('/', name: 'app_advert_index_user', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function indexUser(AdvertRepository $advertRepository): Response
     {
         return $this->render('advert/index.html.twig', [
-            'adverts' => $advertRepository->findBy(['idUser'=>$this->getUser()]),
+            'adverts' => $advertRepository->findBy(['idUser'=>$this->getUser()])
         ]);
     }
     #[IsGranted('ROLE_USER')]
@@ -52,7 +52,7 @@ class AdvertController extends AbstractController
             //$location = $locationRepository->findOneBy(['idRegion' => $region->getId()]);
             $location = new Location();
             $location->setIdRegion($region);
-
+            $location->setCity($city->getName());
 
             $advert->setIdLocation($location);
             $advert->setIdUser($user);
@@ -105,7 +105,7 @@ class AdvertController extends AbstractController
 */
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository,User $user): Response
+    public function edit(int $id,Request $request, Advert $advert, AdvertRepository $advertRepository,User $user): Response
     {
         if (!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -114,6 +114,7 @@ class AdvertController extends AbstractController
             $this->addFlash('alert','Accès refusé');
             return $this->redirectToRoute('home');
         }
+
         $form = $this->createForm(AdvertType::class, $advert);
         $form->handleRequest($request);
 
@@ -126,16 +127,27 @@ class AdvertController extends AbstractController
         return $this->renderForm('advert/edit.html.twig', [
             'advert' => $advert,
             'form' => $form,
+            'id'=>$id
         ]);
     }
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}', name: 'app_advert_delete', methods: ['POST'])]
-    public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
+    public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository,User $user): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
-            $advertRepository->remove($advert, true);
+        if (!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        if ($this->getUser() !== $user){
+            $this->addFlash('alert','Accès refusé');
+            return $this->redirectToRoute('home');
         }
 
-        return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
+        if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
+            dd($advert);
+            $advertRepository->remove($advert, true);
+
+        }
+
+        return $this->redirectToRoute('app_advert_index_user', [], Response::HTTP_SEE_OTHER);
     }
 }

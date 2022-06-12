@@ -206,4 +206,5 @@ class Advert
     {
         return $this->imageName;
     }
+
 }

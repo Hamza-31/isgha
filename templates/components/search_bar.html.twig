@@ -1,14 +1,22 @@
 
 {{ form_start(searchForm, { 'attr' : { 'class': 'shadow-lg rounded  w-75 m-auto pt-3 pb-4 bg-light row justify-content-center gy-2 align-items-center my-5' } }) }}
-<div class="col-sm-5">
+<div class="col-sm-4">
     {{ form_row(searchForm.query) }}
-
 </div>
 <div class="col-sm-4">
     {{ form_row(searchForm.idCategory) }}
 
-</div><div class="col-sm-3">
+</div>
+
+<div class="col-sm-4">
+    {{ form_row(searchForm.city)  }}
+
+</div>
+
+<div class="col-sm-12 d-flex justify-content-center">
     {{ form_row(searchForm.search)  }}
 
 </div>
+
+
 {{ form_end(searchForm) }}

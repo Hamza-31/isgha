@@ -39,19 +39,32 @@ class AdvertRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAdvertsByName(string $query){
+    public function findAdverts(string $query, int $idCategory, array $idLocations){
         $q=$this->createQueryBuilder('ad');
-        $q->where(
-                $q->expr()->andX(
+        if($query){
+            $q->where(
+            $q->expr()->andX(
                 $q->expr()->orX(
                     $q->expr()->like('ad.title',':query'),
                     $q->expr()->like('ad.description',':query')
                 ),
                 $q->expr()->isNotNull('ad.createdAt')
-                )
-             )
-            ->setParameter('query','%'.$query.'%')
-        ;
+            )
+        )
+            ->setParameter('query','%'.$query.'%');
+        }
+
+        if($idCategory !== 162){
+            $q->andWhere('ad.idCategory = :idCategory')
+            ->setParameter('idCategory',$idCategory);
+        }
+        if(!in_array(17,$idLocations)){
+            foreach ($idLocations as $idLocation){
+                $q->andWhere('ad.idLocation = :idLocation')
+                    ->setParameter('idLocation',$idLocation);
+            }
+
+        }
         return $q->getQuery()->getResult();
 
     }

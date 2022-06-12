@@ -21,6 +21,9 @@ class Location
     #[ORM\OneToMany(mappedBy: 'idLocation', targetEntity: Advert::class)]
     private $adverts;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $city;
+
     public function __construct()
     {
         $this->adverts = new ArrayCollection();
@@ -69,6 +72,18 @@ class Location
                 $advert->setIdLocation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

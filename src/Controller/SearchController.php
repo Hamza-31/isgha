@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Collection;
 
 class SearchController extends AbstractController
 {
@@ -41,52 +42,41 @@ class SearchController extends AbstractController
         $cityQuery= $request->request->all('form')['city'];
         $city=$cityRepository->findOneBy(['id'=>$cityQuery]);
 
-        $region=$city->getIdRegion();
-        $location=$locationRepository->findOneBy(['idRegion'=>$region]);
-        $idLocation = $location->getId();
-
+        $idRegion=$city->getIdRegion()->getId();
+        //$location=$locationRepository->findOneBy(['idRegion'=>$idRegion]);
+        $locations=$locationRepository->findBy(['city'=>$city->getName()]);
+        $idLocations=[];
+        foreach ($locations as $location){
+            $idLocations[]=$location->getId();
+        }
         $adverts=[];
-        $advertsCat=[];
         $advertsLocation=[];
-        $advertsQuery=[];
-        if ($query){
-            $advertsQuery=$advertRepository->findAdvertsByName($query);
-        }
-        if(!$query && $idCategory === '162'){
-            $advertsCat=$advertRepository->findAll();
-        }else{
-            $advertsCat=$advertRepository->findBy(['idCategory'=>$idCategory]);
-        }
-        /*
-        if(!$query && $idLocation == '17'){
-            $advertsLocation=$advertRepository->findAll();
-        }else{
-            $advertsLocation=$advertRepository->findBy(['id'=>$idLocation]);
-        }
-        */
-        if($advertsCat){
-        $adverts=array_merge($advertsCat);
-        }
-        if($advertsQuery){
-        $adverts=array_merge($advertsQuery);
-        }
-        /*
-        if($advertsLocation){
-        $adverts=array_merge($advertsLocation);
-        }
-        */
-        //$adverts = $paginator->paginate($adverts, $request->query->getInt('page',1),6);
-//var_dump($adverts);
-  //      exit();
 
-        //$wordToSearch = $request->request->all('form')['query'];
-        //$query = new TypesenseQuery( 	$wordToSearch, 'title');
+                if(!$query && $idCategory==162 && in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAll();
+                }
+                if($query && $idCategory==162 && in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAdverts($query,162,[17]);
+                }
+                if(!$query && $idCategory!=162 && in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAdverts('',$idCategory,17);
+                }
+                if(!$query && $idCategory==162 && !in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAdverts('',162,$idLocations);
+                }
+                if($query && $idCategory!=162 && in_array(17,$idLocations)){
 
-        // Get Doctrine Hydrated objects
-        //$results = $this->advertFinder->query($query)->getResults();
-        // Get raw results from Typesence
-        // $rawResults = $this->advertFinder->rawQuery($query)->getResults();
-        // Return 'adverts'=>$rawResults
+                    $adverts=$advertRepository->findAdverts($query,$idCategory,[17]);
+                }
+                if($query && $idCategory==162 && !in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAdverts($query,162,$idLocations);
+                }
+                if(!$query && $idCategory!=162 && !in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAdverts('',$idCategory,$idLocations);
+                }
+                if($query && $idCategory!=162 && !in_array(17,$idLocations)){
+                    $adverts=$advertRepository->findAdverts($query,$idCategory,$idLocations);
+                }
 
         return $this->render('pages/search_results.html.twig', [
             'adverts'=>$adverts,'query'=>$query
@@ -126,7 +116,7 @@ class SearchController extends AbstractController
                 'label'=>'Choisissez une ville',
                 'label_attr'=>['class'=>'form-label']
             ])
-            ->add('search',SubmitType::class,['label' =>'Rechercher','attr'=>['class'=>'text-light btn btn-primary mt-4 w-100']])
+            ->add('search',SubmitType::class,['label' =>'Rechercher','attr'=>['class'=>'text-light btn btn-primary mt-4 px-5']])
             ->getForm();
 
 
