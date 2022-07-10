@@ -59,7 +59,7 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('adress', TextType::class, ['label' =>'Adresse','attr'=>[
+            ->add('address', TextType::class, ['label' =>'Adresse','attr'=>[
                 'class'=>'form-control']])
 
 

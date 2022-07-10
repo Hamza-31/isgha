@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Advert;
-use App\Entity\Image;
 use App\Entity\Location;
-use App\Entity\User;
 use App\Form\AdvertType;
 use App\Repository\AdvertRepository;
 use App\Repository\CategoryRepository;
@@ -29,7 +27,7 @@ class AdvertController extends AbstractController
     public function indexUser(AdvertRepository $advertRepository): Response
     {
         return $this->render('advert/index.html.twig', [
-            'adverts' => $advertRepository->findBy(['idUser'=>$this->getUser()])
+            'adverts' => $advertRepository->findBy(['idUser'=>$this->getUser()],['createdAt'=>'DESC'])
         ]);
     }
     #[IsGranted('ROLE_USER')]
@@ -80,7 +78,7 @@ class AdvertController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_advert_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_advert_show', methods: ['GET'])]
     #[ParamConverter('advert', class: Advert::class)]
     public function show(Advert $advert, int $id, AdvertRepository $advertRepository, UserRepository $userRepository,NoteRepository $noteRepository): Response
     {
@@ -96,7 +94,7 @@ class AdvertController extends AbstractController
     }
 
     #[IsGranted('ROLE_USER')]
-    #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_advert_edit', methods: ['GET', 'POST'])]
     #[ParamConverter('advert', class: Advert::class)]
     public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
     {
@@ -125,7 +123,7 @@ class AdvertController extends AbstractController
         ]);
     }
     #[IsGranted('ROLE_USER')]
-    #[Route('/{id}/delete', name: 'app_advert_delete', methods: ['POST','GET'])]
+    #[Route('/delete/{id}', name: 'app_advert_delete', methods: ['POST','GET'])]
     #[ParamConverter('advert', class: Advert::class)]
     public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
     {

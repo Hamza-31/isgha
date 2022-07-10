@@ -14,20 +14,35 @@
 
     Modification des informations de l'utilisateur
     </h1>
-    {{ form_start(userForm) }}
-    <fieldset class="mb-4">
-        <legend>Identité</legend>
+    {{ form_start(userForm, { 'attr' : { 'class': 'p-3 row g-3 shadow-lg rounded  w-75 m-auto pt-3 pb-4 bg-light row justify-content-center gy-2 align-items-center my-5' } }) }}
+
+        <h2>Identité</h2>
+        <div class="col-md-6">
     {{ form_row(userForm.username) }}
+        </div>
+        <div class="col-md-6">
         {{ form_row(userForm.email) }}
-    </fieldset>
-    <fieldset class="mb-4">
-        <legend>Coordonnées</legend>
+        </div>
+        <div class="col-12">
+        {{ form_row(userForm.address) }}
+        </div>
+
+    <
+        <h2>Coordonnées</h2>
+        <div class="col-md-6">
         {{ form_row(userForm.phoneNumber) }}
-        {{ form_row(userForm.zipcode) }}
+        </div>
+        <div class="col-md-4">
         {{ form_row(userForm.city) }}
-        {{ form_row(userForm.adress) }}
-        {{ form_row(userForm.plainPassword) }}
-    </fieldset>
+        </div>
+        <div class="col-md-2">
+        {{ form_row(userForm.zipcode) }}
+        </div>
+        <div class="col-md-12">
+        {{ form_row(userForm.plainPassword, {
+            label: 'Password'
+        }) }}
+        </div>
     {{ form_end(userForm) }}
 </div>
 {% endblock %}

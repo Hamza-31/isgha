@@ -8,11 +8,13 @@ use App\Entity\User;
 use App\Form\NoteType;
 use App\Form\UserPasswordType;
 use App\Form\UserType;
+use App\Repository\AdvertRepository;
 use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +34,7 @@ class UserController extends AbstractController
      */
     #[Route('/user/edit/{id}', name: 'app_user', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
+    #[ParamConverter('user', class: User::class)]
     public function index(Request $request,User $user, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher,int $id): Response
     {
         if (!$this->getUser()){
@@ -75,6 +78,7 @@ class UserController extends AbstractController
      */
     #[IsGranted('ROLE_USER')]
     #[Route('/user/edit-mdp/{id}', name: 'app_user_edit_password', methods: ['GET','POST'])]
+    #[ParamConverter('user', class: User::class)]
     public function editPassword(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $manager, int $id): Response{
 
         if (!$this->getUser()){
@@ -97,7 +101,6 @@ class UserController extends AbstractController
                     )
                 );
 
-                //$user->setCity('Myleschester');
                 $manager->persist($user);
                 $manager->flush();
                 $this->addFlash('success','Le mot de passe a été bien modifié.');
@@ -110,12 +113,14 @@ class UserController extends AbstractController
     }
     #[Route('/user/{id}', name: 'app_user_details', methods: ['GET','POST'])]
     #[IsGranted('ROLE_USER')]
-    public function userDetails( EntityManagerInterface $manager,NoteRepository $noteRepository,Request $request, UserRepository $userRepository, User $user, int $id): Response
+    #[ParamConverter('user', class: User::class)]
+    public function userDetails( EntityManagerInterface $manager,NoteRepository $noteRepository,Request $request, UserRepository $userRepository, User $user,AdvertRepository $advertRepository, int $id): Response
     {
 
         $note =new Note();
         $form=$this->createForm(NoteType::class,$note);
         $form->handleRequest($request);
+        $adverts=$advertRepository->findBy(['idUser'=>$user->getId()]);
 
 
         if($form->isSubmitted() && $form->isValid()){
@@ -134,7 +139,8 @@ class UserController extends AbstractController
         }
         return $this->render('pages/user/details.html.twig', [
             'user' => $userRepository->findOneBy(['id'=>$id]),
-            'userDetailsForm'=> $form->createView()
+            'userDetailsForm'=> $form->createView(),
+            'adverts'=>$adverts
         ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Entity\Advert;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -25,6 +26,7 @@ class AdvertCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('title'),
             TextField::new('description'),
+            BooleanField::new('isValid'),
             NumberField::new('price')->hideOnIndex(),
             DateTimeField::new('createdAt')->hideOnForm(),
             DateTimeField::new('updatedAt'),

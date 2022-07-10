@@ -48,7 +48,8 @@ class AdvertType extends AbstractType
            // ->add('isValid')
            // ->add('idUser')
            // ->add('idLocation')
-            ->add('city', ChoiceType::class, [
+            ->add('city', EntityType::class, [
+               'class' => City::class,
                 'attr'=>[
                     'class'=>'form-select'],
                 'label'=>'Ville',
